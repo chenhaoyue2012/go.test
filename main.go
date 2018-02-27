@@ -9,6 +9,8 @@ import (
 	"go.test/controller/goods"
 	"go.test/controller/moon"
 	"go.test/controller/user"
+	"go.test/config"
+	"fmt"
 )
 
 
@@ -45,5 +47,5 @@ func main() {
 
 
 	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%d", config.Host, config.Port)))
 }
