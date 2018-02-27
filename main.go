@@ -63,7 +63,7 @@ func Hey(c	echo.Context)	error{
 
 	defer r.Close()
 
-	return nil
+	return c.String(http.StatusOK, fmt.Sprintf("Hello, %v!\n", username))
 }
 
 type	User	struct	{
