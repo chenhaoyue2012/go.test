@@ -21,6 +21,10 @@ func	Hello(c	echo.Context)	error{
 	return	c.Render(http.StatusOK,"hello","zhangsan")
 }
 
+type	User	struct	{
+	Name		string	`json:"name"	xml:"name"`
+	Email	string	`json:"email"	xml:"email"`
+}
 
 func main() {
 	t :=&Template{
@@ -37,7 +41,12 @@ func main() {
 
 	// Route => handler
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, moon!\n")
+		u	:=	&User{
+			Name:		"Jon",
+			Email:	"jon@labstack.com",
+		}
+		return	c.JSON(http.StatusOK,	u)
+		//return c.String(http.StatusOK, "Hello, moon!\n")
 	})
 
 	e.GET("/hello",	Hello)
