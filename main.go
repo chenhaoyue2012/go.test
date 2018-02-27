@@ -33,6 +33,7 @@ func main() {
 
 	// Echo instance
 	e := echo.New()
+	e.Static("/",	"assets")		//静态文件
 	e.Renderer	=	t
 
 	// Middleware
