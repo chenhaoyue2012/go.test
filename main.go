@@ -9,6 +9,7 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"fmt"
+	"github.com/garyburd/redigo/redis"
 )
 
 func checkErr(err error) {
@@ -44,6 +45,27 @@ func	Hello(c	echo.Context)	error{
 	return	c.Render(http.StatusOK,"hello","zhangsan")
 }
 
+func Hey(c	echo.Context)	error{
+	r, err := redis.Dial("tcp", "172.17.0.3:6379")
+	if err != nil {
+		fmt.Println("Connect to redis error", err)
+		return nil
+	} else {
+		fmt.Println("Connect to redis success")
+	}
+
+	username, err := redis.String(r.Do("GET", "user:name:3"))
+	if err != nil {
+		fmt.Println("redis get failed:", err)
+	} else {
+		fmt.Printf("Get mykey: %v \n", username)
+	}
+
+	defer r.Close()
+
+	return nil
+}
+
 type	User	struct	{
 	Name		string	`json:"name"	xml:"name"`
 	Email	string	`json:"email"	xml:"email"`
@@ -74,6 +96,8 @@ func main() {
 	})
 
 	e.GET("/hello",	Hello)
+	e.GET("/hey",	Hey)
+
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
