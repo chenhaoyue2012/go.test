@@ -6,8 +6,16 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"io"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"fmt"
 )
 
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
 
 type	Template	struct{
 	templates	*template.Template
@@ -18,6 +26,21 @@ func(t	*Template)	Render(w	io.Writer,	name	string,	data	interface {},	c	echo.Con
 }
 
 func	Hello(c	echo.Context)	error{
+	db, err := sql.Open("mysql", "root:root@tcp(172.17.0.4:3306)/blog?charset=utf8")
+	// query
+	rows, err := db.Query("SELECT id,name FROM bl_users")
+	checkErr(err)
+
+	for rows.Next() {
+		var uid int
+		var username string
+
+		err = rows.Scan(&uid, &username)
+		checkErr(err)
+		fmt.Println(uid)
+		fmt.Println(username)
+	}
+
 	return	c.Render(http.StatusOK,"hello","zhangsan")
 }
 
